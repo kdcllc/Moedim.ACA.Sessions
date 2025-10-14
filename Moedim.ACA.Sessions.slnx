@@ -1,0 +1,5 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Moedim.ACA.Sessions/Moedim.ACA.Sessions.csproj" />
+  </Folder>
+</Solution>

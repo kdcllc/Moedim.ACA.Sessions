@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(ProjectsTargetFrameworks)</TargetFrameworks>
+    <TargetFrameworks Condition="'$(Configuration)' == 'Debug'">$(ProjectsDebugTargetFrameworks)</TargetFrameworks>
+    <VersionSuffix>preview</VersionSuffix>
+    <NoWarn>$(NoWarn);MEAI001</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup>
+      <IsPackable>true</IsPackable>
+  </PropertyGroup>
+
+   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0'">
+      <PackageReference Include="System.Text.Json" />
+  </ItemGroup>
+  
+</Project>
