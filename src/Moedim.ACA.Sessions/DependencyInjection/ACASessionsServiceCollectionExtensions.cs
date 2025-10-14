@@ -1,4 +1,9 @@
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Moedim.ACA.Sessions;
+using Moedim.ACA.Sessions.Options;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -19,7 +24,7 @@ public static class ACASessionsServiceCollectionExtensions
         // For example, if there are any singleton or scoped services, they can be added like this:
         // services.AddSingleton<IMyService, MyServiceImplementation>();
         services.AddHttpClient();
-        services.AddOptions<Moedim.ACA.Sessions.Options.AzureTokenProviderOptions>()
+        services.AddOptions<AzureTokenProviderOptions>()
             .Configure<IConfiguration>((settings, configuration) =>
             {
                 var section = configuration.GetSection("ACASessions:AzureTokenProvider");
@@ -29,9 +34,17 @@ public static class ACASessionsServiceCollectionExtensions
                 {
                     settings.RefreshBeforeMinutes = refreshBeforeMinutes;
                 }
-                
+
                 settings.Scopes = section["Scopes"]?.Split(' ', StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>();
             });
+
+        services.TryAddSingleton<IAzureTokenProvider>(sp =>
+        {
+            var options = sp.GetRequiredService<IOptions<AzureTokenProviderOptions>>();
+            var logger = sp.GetRequiredService<ILogger<AzureTokenProvider>>();
+            return new AzureTokenProvider(options, logger);
+        });
+
         return services;
     }
 }
