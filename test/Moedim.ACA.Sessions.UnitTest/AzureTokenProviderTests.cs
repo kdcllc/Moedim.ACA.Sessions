@@ -16,7 +16,10 @@ public class AzureTokenProviderTests
         var credential = new TestTokenCredential([token]);
         var logger = new NoOpLogger<AzureTokenProvider>();
 
-        using var provider = new AzureTokenProvider(logger, credential, TimeSpan.FromMinutes(1));
+        var options = new AzureTokenProviderOptions { Scopes = ["https://dynamicsessions.io/.default"], RefreshBeforeMinutes = 1 };
+        var ioptions = Microsoft.Extensions.Options.Options.Create(options);
+
+        using var provider = new AzureTokenProvider(ioptions, logger, credential);
 
         var result = await provider.GetTokenAsync(CancellationToken.None);
 
@@ -34,7 +37,10 @@ public class AzureTokenProviderTests
         var credential = new TestTokenCredential([token], delay: TimeSpan.FromMilliseconds(200));
         var logger = new NoOpLogger<AzureTokenProvider>();
 
-        using var provider = new AzureTokenProvider(logger, credential, TimeSpan.FromMinutes(1));
+        var options = new AzureTokenProviderOptions { Scopes = ["https://dynamicsessions.io/.default"], RefreshBeforeMinutes = 1 };
+        var ioptions = Microsoft.Extensions.Options.Options.Create(options);
+
+        using var provider = new AzureTokenProvider(ioptions, logger, credential);
 
         var tasks = Enumerable.Range(0, 10).Select(_ => provider.GetTokenAsync(CancellationToken.None)).ToArray();
 
@@ -58,7 +64,10 @@ public class AzureTokenProviderTests
         var logger = new NoOpLogger<AzureTokenProvider>();
 
         // No refresh buffer so expired token forces refresh immediately on next call.
-        using var provider = new AzureTokenProvider(logger, credential, TimeSpan.Zero);
+        var options = new AzureTokenProviderOptions { Scopes = ["https://dynamicsessions.io/.default"], RefreshBeforeMinutes = 0 };
+        var ioptions = Microsoft.Extensions.Options.Options.Create(options);
+
+        using var provider = new AzureTokenProvider(ioptions, logger, credential);
 
         var t1 = await provider.GetTokenAsync(CancellationToken.None);
         Assert.Equal(firstTokenValue, t1);
@@ -73,7 +82,7 @@ public class AzureTokenProviderTests
     public async Task UsesOptions_SendsScopesFromOptions()
     {
         var scopes = new[] { "scope-a", "scope-b" };
-        var options = new AzureTokenProviderOptions { Scopes = scopes };
+        var options = new AzureTokenProviderOptions { Scopes = scopes, RefreshBeforeMinutes = 1 };
         var ioptions = Microsoft.Extensions.Options.Options.Create(options);
 
         var tokenValue = "opt-token";
@@ -82,92 +91,12 @@ public class AzureTokenProviderTests
         var credential = new TestTokenCredential([token]);
         var logger = new NoOpLogger<AzureTokenProvider>();
 
-        using var provider = new AzureTokenProvider(logger, ioptions, credential, TimeSpan.FromMinutes(1));
+        using var provider = new AzureTokenProvider(ioptions, logger, credential);
 
         var result = await provider.GetTokenAsync(CancellationToken.None);
 
         Assert.Equal(tokenValue, result);
         Assert.NotNull(credential.LastRequestedScopes);
         Assert.Equal(scopes, credential.LastRequestedScopes);
-    }
-
-    // Simple test TokenCredential that returns configured AccessToken instances in order.
-    private class TestTokenCredential : TokenCredential
-    {
-        private readonly ConcurrentQueue<AccessToken> _tokens;
-        private readonly TimeSpan _delay;
-        private int _callCount;
-
-        public TestTokenCredential(IEnumerable<AccessToken> tokens, TimeSpan? delay = null)
-        {
-            _tokens = new ConcurrentQueue<AccessToken>(tokens);
-            _delay = delay ?? TimeSpan.Zero;
-        }
-
-        public int CallCount => Volatile.Read(ref _callCount);
-
-        public string[] LastRequestedScopes { get; private set; } = Array.Empty<string>();
-
-        public override AccessToken GetToken(TokenRequestContext requestContext, CancellationToken cancellationToken)
-        {
-            Interlocked.Increment(ref _callCount);
-            LastRequestedScopes = requestContext.Scopes.ToArray();
-            if (_delay > TimeSpan.Zero)
-            {
-                Task.Delay(_delay, cancellationToken).GetAwaiter().GetResult();
-            }
-
-            if (_tokens.TryDequeue(out var token))
-            {
-                return token;
-            }
-
-            return new AccessToken("default", DateTimeOffset.UtcNow.AddMinutes(5));
-        }
-
-        public override async ValueTask<AccessToken> GetTokenAsync(TokenRequestContext requestContext, CancellationToken cancellationToken)
-        {
-            Interlocked.Increment(ref _callCount);
-            LastRequestedScopes = requestContext.Scopes.ToArray();
-
-            if (_delay > TimeSpan.Zero)
-            {
-                await Task.Delay(_delay, cancellationToken).ConfigureAwait(false);
-            }
-
-            if (_tokens.TryDequeue(out var token))
-            {
-                return token;
-            }
-
-            return new AccessToken("default", DateTimeOffset.UtcNow.AddMinutes(5));
-        }
-    }
-
-    // Minimal no-op logger implementation to avoid bringing logging packages into the tests.
-    private sealed class NoOpLogger<T> : ILogger<T>
-    {
-        IDisposable ILogger.BeginScope<TState>(TState state)
-        {
-            return NoopDisposable.Instance;
-        }
-
-        public bool IsEnabled(LogLevel logLevel)
-        {
-            return false;
-        }
-
-        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
-        {
-        }
-
-        private sealed class NoopDisposable : IDisposable
-        {
-            public static readonly NoopDisposable Instance = new NoopDisposable();
-
-            public void Dispose()
-            {
-            }
-        }
     }
 }

@@ -21,4 +21,7 @@
       <PackageReference Include="System.Text.Json" />
   </ItemGroup>
   
+  <ItemGroup>
+    <InternalsVisibleTo Include="Moedim.ACA.Sessions.UnitTest" />
+  </ItemGroup> 
 </Project>

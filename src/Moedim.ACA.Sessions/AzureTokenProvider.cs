@@ -9,7 +9,7 @@ namespace Moedim.ACA.Sessions;
 /// <summary>
 /// Enables Microsoft Entra Token provider to be used.
 /// </summary>
-public class AzureTokenProvider : IDisposable
+public class AzureTokenProvider : IAzureTokenProvider
 {
     // LoggerMessage delegates to avoid allocation when logging is disabled.
     private static readonly Action<ILogger, string, Exception?> LogAcquiringToken = LoggerMessage.Define<string>(LogLevel.Debug, new EventId(1, nameof(GetTokenAsync)), "Acquiring new access token for scopes {Scopes}");
@@ -47,6 +47,27 @@ public class AzureTokenProvider : IDisposable
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _credential = new DefaultAzureCredential();
+        _refreshBefore = TimeSpan.FromMinutes(options.Value.RefreshBeforeMinutes);
+        ArgumentNullException.ThrowIfNull(options);
+
+        _scopes = options.Value.Scopes?.ToArray() ?? DefaultScopes;
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AzureTokenProvider"/> class using
+    /// a custom <see cref="TokenCredential"/>. This constructor is intended for
+    /// testing scenarios where a fake credential is provided.
+    /// </summary>
+    /// <param name="options">The options controlling refresh behavior and scopes.</param>
+    /// <param name="logger">The logger instance.</param>
+    /// <param name="credential">The credential to use for acquiring tokens.</param>
+    internal AzureTokenProvider(
+        IOptions<AzureTokenProviderOptions> options,
+        ILogger<AzureTokenProvider> logger,
+        TokenCredential credential)
+    {
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _credential = credential ?? throw new ArgumentNullException(nameof(credential));
         _refreshBefore = TimeSpan.FromMinutes(options.Value.RefreshBeforeMinutes);
         ArgumentNullException.ThrowIfNull(options);
 
