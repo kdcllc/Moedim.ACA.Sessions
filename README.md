@@ -9,7 +9,6 @@ Library for dynamic sessions in Azure Container Apps
 az account get-access-token --resource https://dynamicsessions.io
 ```
 
-
-## Refences
+## References
 
 - [Serverless code interpreter sessions in Azure Container Apps](https://learn.microsoft.com/en-us/azure/container-apps/sessions-code-interpreter)

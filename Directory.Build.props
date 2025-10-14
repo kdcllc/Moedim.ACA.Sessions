@@ -7,17 +7,16 @@
     </PropertyGroup>
 
     <PropertyGroup>
-  		<SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
-
         <!-- Default properties inherited by all projects. Projects can override. -->
+  		<SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
         <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
         <EnableNETAnalyzers>true</EnableNETAnalyzers>
         <AnalysisMode>AllEnabledByDefault</AnalysisMode>
         <AnalysisLevel>latest</AnalysisLevel>
-        <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <LangVersion>preview</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <NoWarn>$(NoWarn);NU5128</NoWarn>
+        <NoWarn>$(NoWarn);NU5128;SA1206;SA1000;SA1010;</NoWarn>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <ProjectsCoreTargetFrameworks>net9.0;net8.0</ProjectsCoreTargetFrameworks>
         <ProjectsDebugCoreTargetFrameworks>net9.0</ProjectsDebugCoreTargetFrameworks>
@@ -53,13 +52,12 @@
         </RestoreSources>
     </PropertyGroup>
 
-	<PropertyGroup Label="Ownership Settings">
-		<Company>King David Consulting LLC</Company>
-		<Authors>kdcllc</Authors>
-		<Copyright>Copyright © King David Consulting LLC</Copyright>
-	</PropertyGroup>
 
 	<PropertyGroup Label="Nuget Package Settings">
+        <Company>King David Consulting LLC</Company>
+		<Authors>kdcllc</Authors>
+		<Copyright>Copyright © King David Consulting LLC</Copyright>
+        
 		<Description>Azure Container Apps dynamic sessions provides fast and scalable access to a code interpreter.</Description>
 		<PackageProjectUrl>https://github.com/kdcllc/Moedim.ACA.Sessions</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/kdcllc/Moedim.ACA.Sessions.git</RepositoryUrl>

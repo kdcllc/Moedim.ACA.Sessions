@@ -1,0 +1,41 @@
+using System.Text.RegularExpressions;
+
+namespace Moedim.ACA.Sessions;
+
+/// <summary>
+/// Interpreter for executing code snippets.
+/// </summary>
+public sealed class SessionCodeInterpreter
+{
+    private readonly IHttpClientFactory _httpClientFactory;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SessionCodeInterpreter"/> class.
+    /// </summary>
+    /// <param name="httpClientFactory"></param>
+    public SessionCodeInterpreter(IHttpClientFactory httpClientFactory)
+    {
+        _httpClientFactory = httpClientFactory;
+    }
+
+    private static Regex RemoveLeadingWhitespaceBackticksPython() => new(@"^(\s|`)*(?i:python)?\s*", RegexOptions.Compiled | RegexOptions.ExplicitCapture);
+
+    private static Regex RemoveTrailingWhitespaceBackticks() => new(@"(\s|`)*$", RegexOptions.Compiled | RegexOptions.ExplicitCapture);
+
+    /// <summary>
+    /// Sanitize input to the python REPL.
+    /// Remove whitespace, backtick and "python" (if llm mistakes python console as terminal).
+    /// </summary>
+    /// <param name="code">The code to sanitize.</param>
+    /// <returns>The sanitized code.</returns>
+    private static string SanitizeCodeInput(string code)
+    {
+        // Remove leading whitespace and backticks and python (if llm mistakes python console as terminal)
+        code = RemoveLeadingWhitespaceBackticksPython().Replace(code, string.Empty);
+
+        // Remove trailing whitespace and backticks
+        code = RemoveTrailingWhitespaceBackticks().Replace(code, string.Empty);
+
+        return code;
+    }
+}

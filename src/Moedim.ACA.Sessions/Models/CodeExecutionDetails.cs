@@ -5,7 +5,7 @@ namespace Moedim.ACA.Sessions.Models;
 /// <summary>
 /// Represents the detailed result of a Python code execution.
 /// </summary>
-public sealed class ExecutionDetails
+public sealed class CodeExecutionDetails
 {
     /// <summary>
     /// Gets or sets the standard output (stdout) of the code execution.

@@ -2,4 +2,7 @@
   <Folder Name="/src/">
     <Project Path="src/Moedim.ACA.Sessions/Moedim.ACA.Sessions.csproj" />
   </Folder>
+  <Folder Name="/test/">
+    <Project Path="test/Moedim.ACA.Sessions.UnitTest/Moedim.ACA.Sessions.UnitTest.csproj" />
+  </Folder>
 </Solution>
