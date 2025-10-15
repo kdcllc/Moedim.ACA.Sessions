@@ -7,15 +7,15 @@ namespace Moedim.ACA.Sessions;
 /// </summary>
 public sealed class CodeInterpreter
 {
-    private readonly IHttpClientFactory _httpClientFactory;
+    private readonly ISessionsHttpClient _httpClient;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CodeInterpreter"/> class.
     /// </summary>
-    /// <param name="httpClientFactory"></param>
-    public CodeInterpreter(IHttpClientFactory httpClientFactory)
+    /// <param name="httpClient"></param>
+    public CodeInterpreter(ISessionsHttpClient httpClient)
     {
-        _httpClientFactory = httpClientFactory;
+        _httpClient = httpClient;
     }
 
     private static Regex RemoveLeadingWhitespaceBackticksPython() => new(@"^(\s|`)*(?i:python)?\s*", RegexOptions.Compiled | RegexOptions.ExplicitCapture);

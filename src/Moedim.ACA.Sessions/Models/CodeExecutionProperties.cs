@@ -45,4 +45,10 @@ public sealed class CodeExecutionProperties
     /// </summary>
     [JsonPropertyName("code")]
     public string PythonCode { get; }
+
+    /// <summary>
+    /// Determines if the input should be sanitized.
+    /// </summary>
+    [JsonIgnore]
+    public bool SanitizeInput { get; set; }
 }
