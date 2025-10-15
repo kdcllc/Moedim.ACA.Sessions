@@ -1,6 +1,4 @@
-using System.Collections.Concurrent;
 using Azure.Core;
-using Microsoft.Extensions.Logging;
 using Moedim.ACA.Sessions.Options;
 
 namespace Moedim.ACA.Sessions.UnitTest;

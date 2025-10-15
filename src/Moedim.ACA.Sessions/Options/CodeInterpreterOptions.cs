@@ -4,7 +4,7 @@ namespace Moedim.ACA.Sessions.Options;
 /// Options for the session code interpreter.
 /// </summary>
 /// <remarks>Registered as singleton.</remarks>
-public sealed class SessionCodeInterpreterOptions
+public sealed class SessionsHttpClientOptions
 {
     /// <summary>
     /// The endpoint for the Python execution service.

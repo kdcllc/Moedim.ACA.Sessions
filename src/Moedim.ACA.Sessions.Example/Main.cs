@@ -2,7 +2,6 @@
 
 internal sealed class Main : IMain
 {
-
     private readonly ILogger<Main> _logger;
     private readonly IAzureTokenProvider _azureTokenProvider;
     private readonly IHostApplicationLifetime _applicationLifetime;

@@ -1,3 +1,5 @@
+using Moedim.ACA.Sessions.Options;
+
 namespace Moedim.ACA.Sessions.UnitTest;
 
 public class SessionCodeInterpreterOptionsTests
@@ -5,14 +7,14 @@ public class SessionCodeInterpreterOptionsTests
     [Fact]
     public void Endpoint_IsNull_WhenNotSet()
     {
-        var opts = new Options.SessionCodeInterpreterOptions();
+        var opts = new SessionsHttpClientOptions();
         Assert.Null(opts.Endpoint);
     }
 
     [Fact]
     public void Endpoint_RemovesPythonExecuteAndAddsTrailingSlash_WhenSetToExecuteUri()
     {
-        var opts = new Options.SessionCodeInterpreterOptions
+        var opts = new SessionsHttpClientOptions
         {
             Endpoint = new Uri("https://example.com/python/execute")
         };
@@ -22,7 +24,7 @@ public class SessionCodeInterpreterOptionsTests
     [Fact]
     public void Endpoint_AppendsTrailingSlash_WhenMissing()
     {
-        var opts = new Options.SessionCodeInterpreterOptions
+        var opts = new SessionsHttpClientOptions
         {
             Endpoint = new Uri("https://example.com")
         };
@@ -32,7 +34,7 @@ public class SessionCodeInterpreterOptionsTests
     [Fact]
     public void Endpoint_KeepsTrailingSlash_WhenPresent()
     {
-        var opts = new Options.SessionCodeInterpreterOptions
+        var opts = new SessionsHttpClientOptions
         {
             Endpoint = new Uri("https://example.com/")
         };

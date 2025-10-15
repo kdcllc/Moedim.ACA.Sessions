@@ -1,4 +1,3 @@
-using System.Linq;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
@@ -13,7 +12,7 @@ namespace Microsoft.Extensions.DependencyInjection;
 /// </summary>
 public static class ACASessionsServiceCollectionExtensions
 {
-    private static readonly char[] ScopeSeparators = new[] { ' ', ',', ';' };
+    private static readonly char[] ScopeSeparators = [' ', ',', ';'];
 
     /// <summary>
     /// Adds the ACA Sessions services to the specified IServiceCollection.
@@ -23,10 +22,18 @@ public static class ACASessionsServiceCollectionExtensions
     public static IServiceCollection AddACASessions(
         this IServiceCollection services)
     {
-        // Register any services required by the ACA Sessions library here.
-        // For example, if there are any singleton or scoped services, they can be added like this:
-        // services.AddSingleton<IMyService, MyServiceImplementation>();
-        services.AddHttpClient();
+        services.AddAzureTokenProvider();
+        services.AddSessionsHttpClient();
+        return services;
+    }
+
+    /// <summary>
+    /// Adds the AzureTokenProvider service to the specified IServiceCollection.
+    /// </summary>
+    /// <param name="services">The IServiceCollection to add the service to.</param>
+    /// <returns>The updated IServiceCollection.</returns>
+    public static IServiceCollection AddAzureTokenProvider(this IServiceCollection services)
+    {
         services.AddOptions<AzureTokenProviderOptions>()
             .Configure<IConfiguration>((settings, configuration) =>
             {
@@ -72,6 +79,17 @@ public static class ACASessionsServiceCollectionExtensions
             return new AzureTokenProvider(options, logger);
         });
 
+        return services;
+    }
+
+    /// <summary>
+    /// Adds the SessionsHttpClient service to the specified IServiceCollection.
+    /// </summary>
+    /// <param name="services">The IServiceCollection to add the service to.</param>
+    /// <returns>The updated IServiceCollection.</returns>
+    public static IServiceCollection AddSessionsHttpClient(this IServiceCollection services)
+    {
+        services.AddHttpClient<ISessionsHttpClient, SessionsHttpClient>();
         return services;
     }
 }
