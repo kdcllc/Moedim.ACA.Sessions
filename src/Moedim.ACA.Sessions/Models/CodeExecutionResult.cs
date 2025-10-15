@@ -25,35 +25,12 @@ public sealed class CodeExecutionResult
     /// </summary>
     public override string ToString()
     {
-#if NET6_0_OR_GREATER
-        // Serialize the model directly using the source-generated context so
-        // trimming/AOT scenarios have the required metadata available.
-        return JsonSerializer.Serialize(this, SessionsJsonSerializerContext.Default.CodeExecutionResult);
-#else
-        using var stream = new MemoryStream();
-        using (var writer = new Utf8JsonWriter(stream))
+        return JsonSerializer.Serialize(new
         {
-            writer.WriteStartObject();
-            writer.WriteString("status", Status);
-
-            writer.WritePropertyName("result");
-            if (Result is null)
-            {
-                writer.WriteNullValue();
-            }
-            else
-            {
-                writer.WriteStartObject();
-                writer.WriteString("executionResult", Result.ExecutionResult);
-                writer.WriteString("stdout", Result.StdOut);
-                writer.WriteString("stderr", Result.StdErr);
-                writer.WriteEndObject();
-            }
-
-            writer.WriteEndObject();
-        }
-
-        return Encoding.UTF8.GetString(stream.ToArray());
-#endif
+            status = Status,
+            result = Result?.ExecutionResult,
+            stdOut = Result?.StdOut,
+            stdErr = Result?.StdErr
+        });
     }
 }

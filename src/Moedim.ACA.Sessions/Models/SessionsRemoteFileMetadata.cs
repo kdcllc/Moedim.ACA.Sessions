@@ -6,7 +6,7 @@ namespace Moedim.ACA.Sessions.Models;
 /// <summary>
 /// Metadata for an entity: file or directory in the session.
 /// </summary>
-public sealed class SessionsRemoteFileMetadata
+public sealed class RemoteFileMetadata
 {
     /// <summary>
     /// The name of the entity.

@@ -4,7 +4,7 @@
     <TargetFrameworks>$(ProjectsTargetFrameworks)</TargetFrameworks>
     <TargetFrameworks Condition="'$(Configuration)' == 'Debug'">$(ProjectsDebugTargetFrameworks)</TargetFrameworks>
     <VersionSuffix>preview</VersionSuffix>
-    <NoWarn>$(NoWarn);MEAI001</NoWarn>
+    <NoWarn>$(NoWarn);MEAI001;IL3050;IL2026;</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -20,8 +20,8 @@
    <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0'">
       <PackageReference Include="System.Text.Json" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <InternalsVisibleTo Include="Moedim.ACA.Sessions.UnitTest" />
-  </ItemGroup> 
+  </ItemGroup>
 </Project>

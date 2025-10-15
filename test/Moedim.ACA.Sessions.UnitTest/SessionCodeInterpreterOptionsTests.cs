@@ -2,7 +2,7 @@ using Moedim.ACA.Sessions.Options;
 
 namespace Moedim.ACA.Sessions.UnitTest;
 
-public class SessionCodeInterpreterOptionsTests
+public class SessionsHttpClientOptionsTests
 {
     [Fact]
     public void Endpoint_IsNull_WhenNotSet()
