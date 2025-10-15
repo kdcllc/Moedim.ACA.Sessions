@@ -1,0 +1,19 @@
+workflow: GitHubFlow/v1
+mode: ContinuousDeployment
+next-version: 1.0.0
+branches:
+  master:
+    mode: ManualDeployment
+    label: ''
+    regex: ^master$|^main$
+  feature:
+    mode: ContinuousDelivery
+    label: useBranchName
+    regex: ^features?[/-]
+  develop:
+    mode: ContinuousDelivery
+    label: preview
+    regex: ^dev(elop)?(ment)?$
+ignore:
+  sha: []
+merge-message-formats: {}

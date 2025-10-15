@@ -1,0 +1,86 @@
+<Project>
+
+    <PropertyGroup>
+        <RepoRoot>$(MSBuildThisFileDirectory)</RepoRoot>
+        <!-- Reference for the msbuild tags: https://docs.microsoft.com/en-us/dotnet/core/tools/csproj -->
+        <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <!-- Default properties inherited by all projects. Projects can override. -->
+  		<SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
+        <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
+        <EnableNETAnalyzers>true</EnableNETAnalyzers>
+        <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+        <AnalysisLevel>latest</AnalysisLevel>
+        <LangVersion>preview</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <NoWarn>$(NoWarn);NU5128;SA1206;SA1000;SA1010;SA1009;</NoWarn>
+        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+        <ProjectsCoreTargetFrameworks>net9.0;net8.0</ProjectsCoreTargetFrameworks>
+        <ProjectsDebugCoreTargetFrameworks>net9.0</ProjectsDebugCoreTargetFrameworks>
+        <ProjectsTargetFrameworks>net9.0;net8.0;netstandard2.0;</ProjectsTargetFrameworks>
+        <ProjectsDebugTargetFrameworks>net9.0;</ProjectsDebugTargetFrameworks>
+        <IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">true</IsAotCompatible>
+        <Configurations>Debug;Release;Publish</Configurations>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <IsReleaseCandidate>false</IsReleaseCandidate>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <!-- Disable NuGet packaging by default. Projects can override. -->
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)'=='Publish'">
+        <Optimize>True</Optimize>
+    </PropertyGroup>
+
+    <!-- .NET Framework/.NET Standard don't properly support nullable reference types, suppress any
+    warnings for those TFMs -->
+    <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0'">
+        <NoWarn>$(NoWarn);nullable</NoWarn>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <RestoreSources>
+            $(RestoreSources);
+            https://api.nuget.org/v3/index.json;
+        </RestoreSources>
+    </PropertyGroup>
+
+
+	<PropertyGroup Label="Nuget Package Settings">
+        <Company>King David Consulting LLC</Company>
+		<Authors>kdcllc</Authors>
+		<Copyright>Copyright © King David Consulting LLC</Copyright>
+
+		<Description>Azure Container Apps dynamic sessions provides fast and scalable access to a code interpreter.</Description>
+		<PackageProjectUrl>https://github.com/kdcllc/Moedim.ACA.Sessions</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/kdcllc/Moedim.ACA.Sessions.git</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageIcon>icon.png</PackageIcon>
+		<PackageTags>azure aca, serverless code interpreter</PackageTags>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+	</PropertyGroup>
+
+	<PropertyGroup Label="SourceLink Settings">
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<AllowedOutputExtensionsInPackageBuildOutputFolder>
+			$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+		<DebugType>Embedded</DebugType>
+		<EmbedAllSources>True</EmbedAllSources>
+	</PropertyGroup>
+
+    <ItemGroup>
+        <None Include="../../img/icon.png" Pack="true" Visible="false" PackagePath="" />
+        <None Include="../../README.md" Pack="true" Visible="false" PackagePath="" />
+    </ItemGroup>
+</Project>
