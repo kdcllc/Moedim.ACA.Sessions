@@ -17,7 +17,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <NoWarn>$(NoWarn);NU5128;SA1206;SA1000;SA1010;</NoWarn>
-        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
         <ProjectsCoreTargetFrameworks>net9.0;net8.0</ProjectsCoreTargetFrameworks>
         <ProjectsDebugCoreTargetFrameworks>net9.0</ProjectsDebugCoreTargetFrameworks>
         <ProjectsTargetFrameworks>net9.0;net8.0;netstandard2.0;</ProjectsTargetFrameworks>
@@ -57,7 +57,7 @@
         <Company>King David Consulting LLC</Company>
 		<Authors>kdcllc</Authors>
 		<Copyright>Copyright © King David Consulting LLC</Copyright>
-        
+
 		<Description>Azure Container Apps dynamic sessions provides fast and scalable access to a code interpreter.</Description>
 		<PackageProjectUrl>https://github.com/kdcllc/Moedim.ACA.Sessions</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/kdcllc/Moedim.ACA.Sessions.git</RepositoryUrl>

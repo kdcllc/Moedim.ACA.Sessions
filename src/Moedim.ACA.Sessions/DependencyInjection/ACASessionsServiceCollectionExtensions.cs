@@ -1,3 +1,4 @@
+using System.Linq;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
@@ -12,6 +13,8 @@ namespace Microsoft.Extensions.DependencyInjection;
 /// </summary>
 public static class ACASessionsServiceCollectionExtensions
 {
+    private static readonly char[] ScopeSeparators = new[] { ' ', ',', ';' };
+
     /// <summary>
     /// Adds the ACA Sessions services to the specified IServiceCollection.
     /// </summary>
@@ -35,7 +38,31 @@ public static class ACASessionsServiceCollectionExtensions
                     settings.RefreshBeforeMinutes = refreshBeforeMinutes;
                 }
 
-                settings.Scopes = section["Scopes"]?.Split(' ', StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>();
+                // Support multiple configuration shapes for arrays:
+                // 1) Indexed keys (JSON arrays) -> ACASessions:AzureTokenProvider:Scopes:0, Scopes:1
+                // 2) Single-string fallback with space/comma/semicolon separators -> ACASessions:AzureTokenProvider:Scopes
+                var scopesSection = section.GetSection("Scopes");
+
+                // Prefer a direct string value when present (e.g. "scope-a scope-b") then
+                // fall back to child entries (e.g. Scopes:0, Scopes:1) which are used by
+                // JSON arrays and indexed configuration providers.
+                var scopesRawValue = scopesSection.Value;
+                if (!string.IsNullOrEmpty(scopesRawValue))
+                {
+                    // Legacy/support for a single config key with separated values
+                    settings.Scopes = scopesRawValue.Split(ScopeSeparators, StringSplitOptions.RemoveEmptyEntries);
+                }
+                else
+                {
+                    // Read indexed/array-style configuration (e.g. Scopes:0, Scopes:1 or JSON array)
+                    var childValues = scopesSection.GetChildren()
+                        .Select(c => c.Value)
+                        .Where(s => !string.IsNullOrEmpty(s))
+                        .Select(s => s!)
+                        .ToArray();
+
+                    settings.Scopes = childValues.Length > 0 ? childValues : Array.Empty<string>();
+                }
             });
 
         services.TryAddSingleton<IAzureTokenProvider>(sp =>
