@@ -1,0 +1,63 @@
+@region=eastus
+
+@sub_id=
+
+@resource_group=ai-testing-rg
+
+@version=2024-02-02-preview
+
+@session_pool=python-sessions
+
+@session_id=28a79cc3-0ab3-4c62-b5ac-a42bc4b3cb54
+
+@file_name=installed_packages.json
+#installed_packages.json
+
+## Execute code in a session
+POST https://{{region}}.dynamicsessions.io/subscriptions/{{sub_id}}/resourceGroups/{{resource_group}}/sessionPools/{{session_pool}}/code/execute?api-version={{version}}&identifier={{session_id}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "properties": {
+        "codeInputType": "inline",
+        "executionType": "synchronous",
+        "code": "print('Hello, world!')"
+    }
+}
+
+### List installed packages in a session
+POST https://{{region}}.dynamicsessions.io/subscriptions/{{sub_id}}/resourceGroups/{{resource_group}}/sessionPools/{{session_pool}}/code/execute?api-version={{version}}&identifier={{session_id}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "properties": {
+        "codeInputType": "inline",
+        "executionType": "synchronous",
+        "code": "import pkg_resources\nimport json\nimport os\n\n# Define output path\noutput_path = \"/mnt/data/installed_packages.json\"\n\n# Ensure directory exists (helpful if the folder might not exist yet)\nos.makedirs(os.path.dirname(output_path), exist_ok=True)\n\n# Gather package information\npackages = [\n    {\"name\": d.project_name, \"version\": d.version}\n    for d in pkg_resources.working_set\n]\n\n# Save to JSON\nwith open(output_path, \"w\") as f:\n    json.dump(packages, f, indent=4)\n\nprint(f\"Package information saved to {output_path}\")"
+    }
+}
+
+### list files in the current directory
+GET https://{{region}}.dynamicsessions.io/subscriptions/{{sub_id}}/resourceGroups/{{resource_group}}/sessionPools/{{session_pool}}/files?api-version={{version}}&identifier={{session_id}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### download a file
+GET https://{{region}}.dynamicsessions.io/subscriptions/{{sub_id}}/resourceGroups/{{resource_group}}/sessionPools/{{session_pool}}/files/content/{{file_name}}?api-version={{version}}&identifier={{session_id}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+
+### upload a file
+POST https://{{region}}.dynamicsessions.io/subscriptions/{{sub_id}}/resourceGroups/{{resource_group}}/sessionPools/{{session_pool}}/files/upload?api-version={{version}}&identifier={{session_id}}
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+Authorization: Bearer {{token}}
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="file"; filename="upload.md"
+Content-Type: application/octet-stream
+
+< upload.md
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
