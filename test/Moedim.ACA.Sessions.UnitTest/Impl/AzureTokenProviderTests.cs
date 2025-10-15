@@ -2,7 +2,7 @@ using Azure.Core;
 using Moedim.ACA.Sessions.Impl;
 using Moedim.ACA.Sessions.Options;
 
-namespace Moedim.ACA.Sessions.UnitTest;
+namespace Moedim.ACA.Sessions.UnitTest.Impl;
 
 public class AzureTokenProviderTests
 {

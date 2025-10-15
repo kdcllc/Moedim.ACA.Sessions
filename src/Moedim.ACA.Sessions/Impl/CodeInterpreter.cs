@@ -13,7 +13,7 @@ namespace Moedim.ACA.Sessions.Impl;
 /// </remarks>
 /// <param name="httpClient"></param>
 /// <param name="logger"></param>
-internal sealed class CodeInterpreter(
+public sealed class CodeInterpreter(
     ISessionsHttpClient httpClient,
     ILogger<CodeInterpreter> logger) : ICodeInterpreter
 {
