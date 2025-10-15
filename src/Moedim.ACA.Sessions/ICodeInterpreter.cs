@@ -8,7 +8,7 @@ namespace Moedim.ACA.Sessions;
 public interface ICodeInterpreter
 {
     /// <summary>
-    /// Executes the provided code asynchronously.
+    /// Executes the provided Python code asynchronously.
     /// </summary>
     /// <param name="req"></param>
     /// <param name="cancellationToken"></param>
@@ -18,7 +18,7 @@ public interface ICodeInterpreter
         CancellationToken cancellationToken);
 
     /// <summary>
-    /// Downloads a file from the session asynchronously.
+    /// Downloads a file from the `/mnt/data` directory from the session asynchronously.
     /// </summary>
     /// <param name="req"></param>
     /// <param name="cancellationToken"></param>
@@ -28,7 +28,7 @@ public interface ICodeInterpreter
         CancellationToken cancellationToken);
 
     /// <summary>
-    /// Lists files in the session asynchronously.
+    /// Lists files in the session files or directories in the `/mnt/data` directory asynchronously.
     /// </summary>
     /// <param name="sessionId"></param>
     /// <param name="cancellationToken"></param>
