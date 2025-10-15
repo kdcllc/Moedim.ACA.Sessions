@@ -1,6 +1,6 @@
 <Solution>
   <Folder Name="/src/">
-    <Project Path="src/Moedim.ACA.Sessions.Example/Moedim.ACA.Sessions.Example/Moedim.ACA.Sessions.Example.csproj" />
+    <Project Path="src/Moedim.ACA.Sessions.Example/Moedim.ACA.Sessions.Example.csproj" />
     <Project Path="src/Moedim.ACA.Sessions/Moedim.ACA.Sessions.csproj" />
   </Folder>
   <Folder Name="/test/">

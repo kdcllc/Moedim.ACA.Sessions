@@ -29,7 +29,7 @@ internal sealed class Main : IMain
         _applicationLifetime.ApplicationStopping.ThrowIfCancellationRequested();
 
         var token = await _azureTokenProvider.GetTokenAsync(cancellationToken: _applicationLifetime.ApplicationStopping);
-        _logger.LogInformation("Acquired token with expiry {ExpiresOn}", token);
+        _logger.LogInformation("Acquired token with expiry {Token}", token);
 
         return 0;
     }
