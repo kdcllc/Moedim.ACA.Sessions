@@ -8,14 +8,16 @@ public sealed class SessionCodeInterpreterOptions
 {
     /// <summary>
     /// The endpoint for the Python execution service.
+    /// When setting this property the value is normalized into a base endpoint:
+    /// - Removes "/python/execute" when present.
+    /// - Ensures a trailing slash.
+    /// Reading this property returns the normalized base endpoint.
     /// </summary>
-    public Uri? Endpoint { get; set; }
-
-    /// <summary>
-    /// The computed base endpoint for the Python execution service.
-    /// Returns null when <see cref="Endpoint"/> is not set.
-    /// </summary>
-    public Uri? BaseEndpoint => Endpoint is null ? null : GetBaseEndpoint(Endpoint);
+    public Uri? Endpoint
+    {
+        get;
+        set => field = value is null ? null : GetBaseEndpoint(value);
+    }
 
     /// <summary>
     /// The API version to use when communicating with the Python execution service.

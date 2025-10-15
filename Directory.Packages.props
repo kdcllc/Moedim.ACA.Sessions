@@ -18,6 +18,12 @@
     </ItemGroup>
 
     <ItemGroup>
+		<PackageVersion Include="Bet.Extensions.Templating.Console" Version="2.0.1" />
+		<PackageVersion Include="Microsoft.Extensions.Hosting" Version="9.0.9" />
+		<PackageVersion Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
+	</ItemGroup>
+
+    <ItemGroup>
         <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.0" />
         <PackageVersion Include="xunit" Version="2.9.0" />
         <PackageVersion Include="Moq" Version="4.20.0" />

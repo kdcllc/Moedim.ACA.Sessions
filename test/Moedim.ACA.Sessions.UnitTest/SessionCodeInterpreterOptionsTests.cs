@@ -3,42 +3,39 @@ namespace Moedim.ACA.Sessions.UnitTest;
 public class SessionCodeInterpreterOptionsTests
 {
     [Fact]
-    public void BaseEndpoint_IsNull_WhenEndpointIsNull()
+    public void Endpoint_IsNull_WhenNotSet()
     {
         var opts = new Options.SessionCodeInterpreterOptions();
-        Assert.Null(opts.BaseEndpoint);
+        Assert.Null(opts.Endpoint);
     }
 
     [Fact]
-    public void BaseEndpoint_RemovesPythonExecuteAndAddsTrailingSlash()
+    public void Endpoint_RemovesPythonExecuteAndAddsTrailingSlash_WhenSetToExecuteUri()
     {
         var opts = new Options.SessionCodeInterpreterOptions
         {
             Endpoint = new Uri("https://example.com/python/execute")
         };
-
-        Assert.Equal(new Uri("https://example.com/"), opts.BaseEndpoint);
+        Assert.Equal(new Uri("https://example.com/"), opts.Endpoint);
     }
 
     [Fact]
-    public void BaseEndpoint_AppendsTrailingSlash_WhenMissing()
+    public void Endpoint_AppendsTrailingSlash_WhenMissing()
     {
         var opts = new Options.SessionCodeInterpreterOptions
         {
             Endpoint = new Uri("https://example.com")
         };
-
-        Assert.Equal(new Uri("https://example.com/"), opts.BaseEndpoint);
+        Assert.Equal(new Uri("https://example.com/"), opts.Endpoint);
     }
 
     [Fact]
-    public void BaseEndpoint_KeepsTrailingSlash_WhenPresent()
+    public void Endpoint_KeepsTrailingSlash_WhenPresent()
     {
         var opts = new Options.SessionCodeInterpreterOptions
         {
             Endpoint = new Uri("https://example.com/")
         };
-
-        Assert.Equal(new Uri("https://example.com/"), opts.BaseEndpoint);
+        Assert.Equal(new Uri("https://example.com/"), opts.Endpoint);
     }
 }
