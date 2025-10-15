@@ -9,7 +9,7 @@ namespace Moedim.ACA.Sessions;
 /// <summary>
 /// Enables Microsoft Entra Token provider to be used.
 /// </summary>
-public class AzureTokenProvider : IAzureTokenProvider
+internal class AzureTokenProvider : IAzureTokenProvider
 {
     // LoggerMessage delegates to avoid allocation when logging is disabled.
     private static readonly Action<ILogger, string, Exception?> LogAcquiringToken = LoggerMessage.Define<string>(LogLevel.Debug, new EventId(1, nameof(GetTokenAsync)), "Acquiring new access token for scopes {Scopes}");
