@@ -1,23 +1,25 @@
 using Moedim.ACA.Sessions.Models;
 
-namespace Moedim.ACA.Sessions.UnitTest.Models
+namespace Moedim.ACA.Sessions.UnitTest.Models;
+
+public class FileDownloadResultTests
 {
-    public class FileDownloadResultTests
+    [Theory]
+    [InlineData(new byte[] { 1, 2, 3 }, "download.txt")]
+    [InlineData(new byte[] { }, "")]
+    [InlineData(new byte[] { 255, 0, 127 }, "data.bin")]
+    [InlineData(new byte[] { 42 }, "file42.dat")]
+    public void Properties_CanBeSetAndRetrieved(byte[] fileContents, string remoteFileName)
     {
-        [Fact]
-        public void Constructor_InitializesRequiredProperties()
+        // Arrange & Act
+        var result = new FileDownloadResult
         {
-            var fileContents = new byte[] { 1, 2, 3 };
-            var remoteFileName = "download.txt";
+            FileContents = fileContents,
+            RemoteFileName = remoteFileName
+        };
 
-            var result = new FileDownloadResult
-            {
-                FileContents = fileContents,
-                RemoteFileName = remoteFileName
-            };
-
-            Assert.Equal(fileContents, result.FileContents);
-            Assert.Equal(remoteFileName, result.RemoteFileName);
-        }
+        // Assert
+        Assert.Equal(fileContents, result.FileContents);
+        Assert.Equal(remoteFileName, result.RemoteFileName);
     }
 }

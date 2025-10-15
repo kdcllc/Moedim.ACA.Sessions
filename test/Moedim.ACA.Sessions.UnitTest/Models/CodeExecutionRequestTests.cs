@@ -1,26 +1,26 @@
 using Moedim.ACA.Sessions.Models;
 
-namespace Moedim.ACA.Sessions.UnitTest.Models
+namespace Moedim.ACA.Sessions.UnitTest.Models;
+
+public class CodeExecutionRequestTests
 {
-    public class CodeExecutionRequestTests
+[Theory]
+[InlineData("session-123", "print('Hello')", true)]
+[InlineData("", "", false)]
+[InlineData("session-456", "x = 1", false)]
+public void Properties_CanBeSetAndRetrieved(string sessionId, string code, bool sanitize)
     {
-        [Fact]
-        public void Constructor_InitializesRequiredProperties()
+        // Arrange & Act
+        var request = new CodeExecutionRequest
         {
-            var sessionId = "session-123";
-            var code = "print('Hello')";
-            var sanitize = true;
+            SessionId = sessionId,
+            Code = code,
+            SanitizeInput = sanitize
+        };
 
-            var request = new CodeExecutionRequest
-            {
-                SessionId = sessionId,
-                Code = code,
-                SanitizeInput = sanitize
-            };
-
-            Assert.Equal(sessionId, request.SessionId);
-            Assert.Equal("print('Hello')", request.Code);
-            Assert.True(request.SanitizeInput);
-        }
+        // Assert
+        Assert.Equal(sessionId, request.SessionId);
+        Assert.Equal(code, request.Code);
+        Assert.Equal(sanitize, request.SanitizeInput);
     }
 }

@@ -1,25 +1,27 @@
 using Moedim.ACA.Sessions.Models;
 
-namespace Moedim.ACA.Sessions.UnitTest.Models
+namespace Moedim.ACA.Sessions.UnitTest.Models;
+
+public class FileUploadResultTests
 {
-    public class FileUploadResultTests
+    [Fact]
+    public void Properties_CanBeSetAndRetrieved_WithMetadata()
     {
-        [Fact]
-        public void Constructor_InitializesRequiredProperties()
+        // Arrange
+        var metadata = new RemoteFileMetadata
         {
-            var metadata = new RemoteFileMetadata
-            {
-                Name = "file.txt",
-                LastModifiedAt = DateTime.UtcNow,
-                Type = "file"
-            };
+            Name = "file.txt",
+            LastModifiedAt = DateTime.UtcNow,
+            Type = "file"
+        };
 
-            var result = new FileUploadResult
-            {
-                FileMetadata = metadata
-            };
+        // Act
+        var result = new FileUploadResult
+        {
+            FileMetadata = metadata
+        };
 
-            Assert.Equal(metadata, result.FileMetadata);
-        }
+        // Assert
+        Assert.Equal(metadata, result.FileMetadata);
     }
 }

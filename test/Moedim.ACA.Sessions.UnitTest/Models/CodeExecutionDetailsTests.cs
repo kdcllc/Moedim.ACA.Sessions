@@ -1,27 +1,67 @@
 using Moedim.ACA.Sessions.Models;
 
-namespace Moedim.ACA.Sessions.UnitTest.Models
+namespace Moedim.ACA.Sessions.UnitTest.Models;
+
+public class CodeExecutionDetailsTests
 {
-    public class CodeExecutionDetailsTests
+    [Fact]
+    public void Constructor_InitializesProperties_DefaultValues()
     {
-        [Fact]
-        public void Constructor_InitializesProperties()
-        {
-            var details = new CodeExecutionDetails();
-            Assert.NotNull(details);
-        }
+        // Arrange & Act
+        var details = new CodeExecutionDetails();
 
-        [Fact]
-        public void Properties_CanBeSetAndRetrieved()
-        {
-            var details = new CodeExecutionDetails
-            {
-                // Set sample properties if available
-                // Example: PropertyName = value
-            };
+        // Assert
+        Assert.NotNull(details);
+        Assert.Null(details.StdOut);
+        Assert.Null(details.StdErr);
+        Assert.Null(details.ExecutionResult);
+    }
 
-            // Assert sample property values
-            // Example: Assert.Equal(value, details.PropertyName);
-        }
+    [Theory]
+    [InlineData("output1")]
+    [InlineData("")]
+    [InlineData(null)]
+    public void StdOut_SetValue_ValueIsSet(string? value)
+    {
+        // Arrange
+        var details = new CodeExecutionDetails();
+
+        // Act
+        details.StdOut = value;
+
+        // Assert
+        Assert.Equal(value, details.StdOut);
+    }
+
+    [Theory]
+    [InlineData("error1")]
+    [InlineData("")]
+    [InlineData(null)]
+    public void StdErr_SetValue_ValueIsSet(string? value)
+    {
+        // Arrange
+        var details = new CodeExecutionDetails();
+
+        // Act
+        details.StdErr = value;
+
+        // Assert
+        Assert.Equal(value, details.StdErr);
+    }
+
+    [Theory]
+    [InlineData("result1")]
+    [InlineData("")]
+    [InlineData(null)]
+    public void ExecutionResult_SetValue_ValueIsSet(string? value)
+    {
+        // Arrange
+        var details = new CodeExecutionDetails();
+
+        // Act
+        details.ExecutionResult = value;
+
+        // Assert
+        Assert.Equal(value, details.ExecutionResult);
     }
 }

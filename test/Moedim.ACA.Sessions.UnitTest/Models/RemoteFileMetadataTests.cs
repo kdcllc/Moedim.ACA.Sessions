@@ -1,26 +1,52 @@
 using Moedim.ACA.Sessions.Models;
 
-namespace Moedim.ACA.Sessions.UnitTest.Models
+namespace Moedim.ACA.Sessions.UnitTest.Models;
+
+public class RemoteFileMetadataTests
 {
-    public class RemoteFileMetadataTests
+    [Theory]
+    [InlineData("file.txt", "file")]
+    [InlineData("", "")]
+    [InlineData("data.csv", "data")]
+    [InlineData("image.png", "image")]
+    public void Properties_CanBeSetAndRetrieved(string name, string type)
     {
-        [Fact]
-        public void Constructor_InitializesRequiredProperties()
+        // Arrange
+        var lastModified = DateTime.UtcNow;
+
+        // Act
+        var metadata = new RemoteFileMetadata
         {
-            var name = "file.txt";
-            var lastModified = DateTime.UtcNow;
-            var type = "file";
+            Name = name,
+            LastModifiedAt = lastModified,
+            Type = type
+        };
 
-            var metadata = new RemoteFileMetadata
-            {
-                Name = name,
-                LastModifiedAt = lastModified,
-                Type = type
-            };
+        // Assert
+        Assert.Equal(name, metadata.Name);
+        Assert.Equal(lastModified, metadata.LastModifiedAt);
+        Assert.Equal(type, metadata.Type);
+    }
 
-            Assert.Equal(name, metadata.Name);
-            Assert.Equal(lastModified, metadata.LastModifiedAt);
-            Assert.Equal(type, metadata.Type);
-        }
+    [Fact]
+    public void Properties_CanBeSetAndRetrieved_WithDefaultDate()
+    {
+        // Arrange
+        var name = "default.txt";
+        var type = "default";
+        var lastModified = default(DateTime);
+
+        // Act
+        var metadata = new RemoteFileMetadata
+        {
+            Name = name,
+            LastModifiedAt = lastModified,
+            Type = type
+        };
+
+        // Assert
+        Assert.Equal(name, metadata.Name);
+        Assert.Equal(lastModified, metadata.LastModifiedAt);
+        Assert.Equal(type, metadata.Type);
     }
 }

@@ -1,26 +1,27 @@
 using Moedim.ACA.Sessions.Models;
 
-namespace Moedim.ACA.Sessions.UnitTest.Models
+namespace Moedim.ACA.Sessions.UnitTest.Models;
+
+public class FileUploadRequestTests
 {
-    public class FileUploadRequestTests
+    [Theory]
+    [InlineData("session-789", "upload.txt", new byte[] { 1, 2, 3 })]
+    [InlineData("", "", new byte[] { })]
+    [InlineData("session-000", "image.png", new byte[] { 42 })]
+    [InlineData("session-123", "data.csv", new byte[] { 255, 0, 127 })]
+    public void Properties_CanBeSetAndRetrieved(string sessionId, string fileName, byte[] fileContent)
     {
-        [Fact]
-        public void Constructor_InitializesRequiredProperties()
+        // Arrange & Act
+        var request = new FileUploadRequest
         {
-            var sessionId = "session-789";
-            var fileName = "upload.txt";
-            var fileContent = new byte[] { 1, 2, 3 };
+            SessionId = sessionId,
+            FileName = fileName,
+            FileContent = fileContent
+        };
 
-            var request = new FileUploadRequest
-            {
-                SessionId = sessionId,
-                FileName = fileName,
-                FileContent = fileContent
-            };
-
-            Assert.Equal(sessionId, request.SessionId);
-            Assert.Equal(fileName, request.FileName);
-            Assert.Equal(fileContent, request.FileContent);
-        }
+        // Assert
+        Assert.Equal(sessionId, request.SessionId);
+        Assert.Equal(fileName, request.FileName);
+        Assert.Equal(fileContent, request.FileContent);
     }
 }
