@@ -1,41 +1,48 @@
-using System.Text.RegularExpressions;
+using System.Text;
+using System.Text.Json;
+using Moedim.ACA.Sessions.Models;
 
 namespace Moedim.ACA.Sessions;
 
 /// <summary>
 /// Interpreter for executing code snippets.
 /// </summary>
-public sealed class CodeInterpreter
+/// <remarks>
+/// Initializes a new instance of the <see cref="CodeInterpreter"/> class.
+/// </remarks>
+/// <param name="httpClient"></param>
+public sealed class CodeInterpreter(ISessionsHttpClient httpClient) : ICodeInterpreter
 {
-    private readonly ISessionsHttpClient _httpClient;
+    private readonly ISessionsHttpClient _httpClient = httpClient;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CodeInterpreter"/> class.
+    /// Executes the provided code asynchronously.
     /// </summary>
-    /// <param name="httpClient"></param>
-    public CodeInterpreter(ISessionsHttpClient httpClient)
+    /// <param name="req">The code execution request.</param>
+    /// <param name="cancellationToken">A token to cancel the operation.</param>
+    /// <returns>The result of the code execution.</returns>
+    public async Task<CodeExecutionResult> ExecuteAsync(
+        CodeExecutionRequest req,
+        CancellationToken cancellationToken)
     {
-        _httpClient = httpClient;
-    }
+        var requestBody = new CodeExecutionProperties(
+                req.Code,
+                timeoutInSeconds: req.TimeoutInSeconds,
+                codeInputType: req.CodeInputType,
+                codeExecutionType: req.CodeExecutionType);
 
-    private static Regex RemoveLeadingWhitespaceBackticksPython() => new(@"^(\s|`)*(?i:python)?\s*", RegexOptions.Compiled | RegexOptions.ExplicitCapture);
+        using var content = new StringContent(JsonSerializer.Serialize(requestBody), Encoding.UTF8, "application/json");
 
-    private static Regex RemoveTrailingWhitespaceBackticks() => new(@"(\s|`)*$", RegexOptions.Compiled | RegexOptions.ExplicitCapture);
+        using var response = await _httpClient.SendAsync(
+            method: HttpMethod.Post,
+            path: "executions",
+            sessionId: req.SessionId,
+            cancellationToken: cancellationToken,
+            httpContent: content);
 
-    /// <summary>
-    /// Sanitize input to the python REPL.
-    /// Remove whitespace, backtick and "python" (if llm mistakes python console as terminal).
-    /// </summary>
-    /// <param name="code">The code to sanitize.</param>
-    /// <returns>The sanitized code.</returns>
-    private static string SanitizeCodeInput(string code)
-    {
-        // Remove leading whitespace and backticks and python (if llm mistakes python console as terminal)
-        code = RemoveLeadingWhitespaceBackticksPython().Replace(code, string.Empty);
+        response.EnsureSuccessStatusCode();
 
-        // Remove trailing whitespace and backticks
-        code = RemoveTrailingWhitespaceBackticks().Replace(code, string.Empty);
-
-        return code;
+        var cxt = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+        return JsonSerializer.Deserialize<CodeExecutionResult>(cxt)!;
     }
 }

@@ -2,8 +2,25 @@
 
 Library for dynamic sessions in Azure Container Apps
 
+## Configuration
 
-## Authetnication
+```json
+  "ACASessions": {
+    "AzureTokenProvider": {
+      "RefreshBeforeMinutes": 5,
+      "Scopes": [
+        "https://dynamicsessions.io/.default"
+      ]
+    },
+    "SessionsHttpClient": {
+      "Endpoint": "http://localhost:5000/python/execute/",
+      "ApiVersion": "v1"
+    }
+  }
+```
+
+
+## Authentication
 
 ```bash
 az account get-access-token --resource https://dynamicsessions.io

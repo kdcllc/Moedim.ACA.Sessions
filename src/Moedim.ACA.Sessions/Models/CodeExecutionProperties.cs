@@ -5,7 +5,7 @@ namespace Moedim.ACA.Sessions.Models;
 /// <summary>
 /// Properties for code execution.
 /// </summary>
-public sealed class CodeExecutionProperties
+internal sealed class CodeExecutionProperties
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="CodeExecutionProperties"/> class.
@@ -45,10 +45,4 @@ public sealed class CodeExecutionProperties
     /// </summary>
     [JsonPropertyName("code")]
     public string PythonCode { get; }
-
-    /// <summary>
-    /// Determines if the input should be sanitized.
-    /// </summary>
-    [JsonIgnore]
-    public bool SanitizeInput { get; set; }
 }

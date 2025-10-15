@@ -22,8 +22,20 @@ public static class ACASessionsServiceCollectionExtensions
     public static IServiceCollection AddACASessions(
         this IServiceCollection services)
     {
-        services.AddAzureTokenProvider();
+        services.AddCodeInterpreter();
         services.AddSessionsHttpClient();
+        services.AddAzureTokenProvider();
+        return services;
+    }
+
+    /// <summary>
+    /// Adds the CodeInterpreter service to the specified IServiceCollection.
+    /// </summary>
+    /// <param name="services"></param>
+    /// <returns></returns>
+    public static IServiceCollection AddCodeInterpreter(this IServiceCollection services)
+    {
+        services.AddScoped<ICodeInterpreter, CodeInterpreter>();
         return services;
     }
 
@@ -90,6 +102,24 @@ public static class ACASessionsServiceCollectionExtensions
     public static IServiceCollection AddSessionsHttpClient(this IServiceCollection services)
     {
         services.AddHttpClient<ISessionsHttpClient, SessionsHttpClient>();
+
+        services.AddOptions<SessionsHttpClientOptions>()
+            .Configure<IConfiguration>((settings, configuration) =>
+            {
+                var section = configuration.GetSection("ACASessions:SessionsHttpClient");
+
+                // Assign properties explicitly to avoid Bind issues
+                if (Uri.TryCreate(section["Endpoint"], UriKind.Absolute, out var baseUrl))
+                {
+                    settings.Endpoint = baseUrl;
+                }
+
+                if (section["ApiVersion"] is string apiVersion && !string.IsNullOrEmpty(apiVersion))
+                {
+                    settings.ApiVersion = apiVersion;
+                }
+            });
+
         return services;
     }
 }

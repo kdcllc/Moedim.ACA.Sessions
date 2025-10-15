@@ -16,7 +16,7 @@
         <LangVersion>preview</LangVersion>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <NoWarn>$(NoWarn);NU5128;SA1206;SA1000;SA1010;</NoWarn>
+        <NoWarn>$(NoWarn);NU5128;SA1206;SA1000;SA1010;SA1009;</NoWarn>
         <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
         <ProjectsCoreTargetFrameworks>net9.0;net8.0</ProjectsCoreTargetFrameworks>
         <ProjectsDebugCoreTargetFrameworks>net9.0</ProjectsDebugCoreTargetFrameworks>

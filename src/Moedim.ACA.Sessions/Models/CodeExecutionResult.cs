@@ -9,6 +9,12 @@ namespace Moedim.ACA.Sessions.Models;
 public sealed class CodeExecutionResult
 {
     /// <summary>
+    /// Gets or sets the unique identifier for the execution result.
+    /// </summary>
+    [JsonPropertyName("id")]
+    public required string Id { get; set; }
+
+    /// <summary>
     /// Gets or sets the status of the execution (e.g., Succeeded, Failed).
     /// </summary>
     [JsonPropertyName("status")]
@@ -27,6 +33,7 @@ public sealed class CodeExecutionResult
     {
         return JsonSerializer.Serialize(new
         {
+            id = Id,
             status = Status,
             result = Result?.ExecutionResult,
             stdOut = Result?.StdOut,

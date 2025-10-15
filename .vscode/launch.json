@@ -8,7 +8,7 @@
             "name": "C#: Example Debug",
             "type": "dotnet",
             "request": "launch",
-            "projectPath": "${workspaceFolder}/src/Moedim.ACA.Sessions.Example/Moedim.ACA.Sessions.Example/Moedim.ACA.Sessions.Example.csproj"
+            "projectPath": "${workspaceFolder}/src/Moedim.ACA.Sessions.Example/Moedim.ACA.Sessions.Example.csproj"
         }
 
     ]

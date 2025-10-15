@@ -11,6 +11,7 @@ public class ModelsTests
     {
         var result = new CodeExecutionResult
         {
+            Id = "123",
             Status = "Succeeded",
             Result = null
         };
@@ -42,6 +43,7 @@ public class ModelsTests
 
         var result = new CodeExecutionResult
         {
+            Id = "123",
             Status = "Failed",
             Result = details
         };
