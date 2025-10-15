@@ -5,15 +5,15 @@ namespace Moedim.ACA.Sessions;
 /// <summary>
 /// Interpreter for executing code snippets.
 /// </summary>
-public sealed class SessionCodeInterpreter
+public sealed class CodeInterpreter
 {
     private readonly IHttpClientFactory _httpClientFactory;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="SessionCodeInterpreter"/> class.
+    /// Initializes a new instance of the <see cref="CodeInterpreter"/> class.
     /// </summary>
     /// <param name="httpClientFactory"></param>
-    public SessionCodeInterpreter(IHttpClientFactory httpClientFactory)
+    public CodeInterpreter(IHttpClientFactory httpClientFactory)
     {
         _httpClientFactory = httpClientFactory;
     }
