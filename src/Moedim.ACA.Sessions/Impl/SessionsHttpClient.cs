@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moedim.ACA.Sessions.Options;
 
-namespace Moedim.ACA.Sessions;
+namespace Moedim.ACA.Sessions.Impl;
 
 /// <summary>
 /// Encapsulates HTTP client logic for communicating with a Sessions service.
@@ -50,9 +50,7 @@ internal sealed class SessionsHttpClient : ISessionsHttpClient
         _userAgent = $"Moedim.ACA.Sessions/{typeof(SessionsHttpClient).Assembly.GetName().Version?.ToString() ?? "1.0.0"} (Language=dotnet)";
     }
 
-    /// <summary>
-    /// Sends an HTTP request to the specified path and verifies the response is successful.
-    /// </summary>
+    /// <inheritdoc/>
     public async Task<HttpResponseMessage> SendAsync(
         HttpMethod method,
         string path,
@@ -89,10 +87,6 @@ internal sealed class SessionsHttpClient : ISessionsHttpClient
             string? responseContent = null;
             try
             {
-                // On .NET Framework, EnsureSuccessStatusCode disposes of the response content;
-                // that was changed years ago in .NET Core, but for .NET Framework it means in order
-                // to read the response content in the case of failure, that has to be
-                // done before calling EnsureSuccessStatusCode.
                 responseContent = await response!.Content.ReadAsStringAsync().ConfigureAwait(false);
                 response.EnsureSuccessStatusCode(); // will always throw
             }

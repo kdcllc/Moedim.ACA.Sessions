@@ -60,6 +60,21 @@ internal sealed class Main : IMain
         var listPackagesResult = await _codeInterpreter.ExecuteAsync(getInstalledPackagesRequest, cancellationToken);
         _logger.LogInformation("Execution result for List All Installed Packages code: {Result}", listPackagesResult.ToString());
 
+        // upload a file
+        var localFilePath = "README.md";
+        _logger.LogInformation("Uploading file {LocalFilePath} to session {SessionId}", localFilePath, sessionId);
+        var fileUploadContent = await File.ReadAllBytesAsync(localFilePath, cancellationToken);
+        var uploadResult = await _codeInterpreter.UploadFileAsync(
+            new FileUploadRequest
+            {
+                SessionId = sessionId,
+                FileName = Path.GetFileName(localFilePath),
+                FileContent = fileUploadContent
+            },
+            cancellationToken);
+
+        _logger.LogInformation("Upload result: {UploadResult}", uploadResult.FileMetadata);
+
         var fileList = await _codeInterpreter.ListFilesAsync(sessionId, cancellationToken);
         _logger.LogInformation("Files in session {SessionId}: {FileList}", sessionId, string.Join(", ", fileList.Select(f => f.Name)));
 

@@ -3,7 +3,7 @@ using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Moedim.ACA.Sessions.Models;
 
-namespace Moedim.ACA.Sessions;
+namespace Moedim.ACA.Sessions.Impl;
 
 /// <summary>
 /// Interpreter for executing code snippets.
@@ -17,12 +17,7 @@ internal sealed class CodeInterpreter(
     ISessionsHttpClient httpClient,
     ILogger<CodeInterpreter> logger) : ICodeInterpreter
 {
-    /// <summary>
-    /// Executes the provided code asynchronously.
-    /// </summary>
-    /// <param name="req">The code execution request.</param>
-    /// <param name="cancellationToken">A token to cancel the operation.</param>
-    /// <returns>The result of the code execution.</returns>
+    /// <inheritdoc/>
     public async Task<CodeExecutionResult> ExecuteAsync(
         CodeExecutionRequest req,
         CancellationToken cancellationToken)
@@ -50,12 +45,7 @@ internal sealed class CodeInterpreter(
         return JsonSerializer.Deserialize<CodeExecutionResult>(cxt)!;
     }
 
-    /// <summary>
-    /// Downloads a file from the session asynchronously.
-    /// </summary>
-    /// <param name="req"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
+    /// <inheritdoc/>
     public async Task<FileDownloadResult> DownloadFileAsync(
         FileDownloadRequest req,
         CancellationToken cancellationToken)
@@ -79,12 +69,7 @@ internal sealed class CodeInterpreter(
         };
     }
 
-    /// <summary>
-    /// Lists files in the session asynchronously.
-    /// </summary>
-    /// <param name="sessionId"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
+    /// <inheritdoc/>
     public async Task<IReadOnlyList<RemoteFileMetadata>> ListFilesAsync(
         string sessionId,
         CancellationToken cancellationToken)
@@ -106,5 +91,37 @@ internal sealed class CodeInterpreter(
         var files = jsonElementResult.GetProperty("value");
 
         return files.Deserialize<IReadOnlyList<RemoteFileMetadata>>() ?? Array.Empty<RemoteFileMetadata>();
+    }
+
+    /// <inheritdoc/>
+    public async Task<FileUploadResult> UploadFileAsync(
+        FileUploadRequest req,
+        CancellationToken cancellationToken)
+    {
+        logger.LogTrace("Uploading file {FileName} to session {SessionId}", req.FileName, req.SessionId);
+
+        using var fileContent = new ByteArrayContent(req.FileContent);
+
+        using var multipartFormDataContent = new MultipartFormDataContent()
+        {
+            { fileContent, "file", req.FileName },
+        };
+
+        using var response = await httpClient.SendAsync(
+            method: HttpMethod.Post,
+            path: $"files",
+            sessionId: req.SessionId,
+            cancellationToken: cancellationToken,
+            httpContent: multipartFormDataContent);
+
+        response.EnsureSuccessStatusCode();
+
+        var cxt = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+        var fileMetadata = JsonSerializer.Deserialize<RemoteFileMetadata>(cxt)!;
+
+        return new FileUploadResult
+        {
+            FileMetadata = fileMetadata
+        };
     }
 }

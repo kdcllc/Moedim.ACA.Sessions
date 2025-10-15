@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moedim.ACA.Sessions.Options;
 
-namespace Moedim.ACA.Sessions;
+namespace Moedim.ACA.Sessions.Impl;
 
 /// <summary>
 /// Enables Microsoft Entra Token provider to be used.
@@ -74,11 +74,7 @@ internal class AzureTokenProvider : IAzureTokenProvider
         _scopes = options.Value.Scopes?.ToArray() ?? DefaultScopes;
     }
 
-    /// <summary>
-    /// Gets a token for the specified scope.
-    /// </summary>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
+    /// <inheritdoc/>
     public async Task<string> GetTokenAsync(CancellationToken cancellationToken)
     {
         // Quick non-blocking check - if we have a cached token that's not near expiry, return it.
@@ -121,9 +117,7 @@ internal class AzureTokenProvider : IAzureTokenProvider
         }
     }
 
-    /// <summary>
-    /// Clears the cached token — useful for tests or forcing a refresh.
-    /// </summary>
+    /// <inheritdoc/>
     public void ClearCache()
     {
         _hasCachedToken = false;

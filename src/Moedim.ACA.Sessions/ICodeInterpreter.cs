@@ -36,4 +36,14 @@ public interface ICodeInterpreter
     Task<IReadOnlyList<RemoteFileMetadata>> ListFilesAsync(
         string sessionId,
         CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Uploads a file to the `/mnt/data` directory in the session asynchronously.
+    /// </summary>
+    /// <param name="req"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    Task<FileUploadResult> UploadFileAsync(
+        FileUploadRequest req,
+        CancellationToken cancellationToken);
 }
