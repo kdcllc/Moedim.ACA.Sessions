@@ -9,7 +9,7 @@ namespace Moedim.ACA.Sessions.Impl;
 /// Encapsulates HTTP client logic for communicating with a Sessions service.
 /// Extracted from code interpreter logic so HTTP concerns are isolated.
 /// </summary>
-internal sealed class SessionsHttpClient : ISessionsHttpClient
+public sealed class SessionsHttpClient : ISessionsHttpClient
 {
     private readonly ILogger<SessionsHttpClient> _logger;
     private readonly HttpClient _httpClient;
@@ -18,6 +18,13 @@ internal sealed class SessionsHttpClient : ISessionsHttpClient
     private readonly string _apiVersion;
     private readonly string _userAgent;
 
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="SessionsHttpClient"/> class.
+    /// </summary>
+    /// <param name="httpClient"></param>
+    /// <param name="options"></param>
+    /// <param name="azureTokenProvider"></param>
+    /// <param name="logger"></param>
     public SessionsHttpClient(
         HttpClient httpClient,
         IOptions<SessionsHttpClientOptions> options,
