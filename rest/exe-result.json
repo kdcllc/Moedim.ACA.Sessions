@@ -1,0 +1,11 @@
+{
+    "$id": "1",
+    "properties": {
+        "$id": "2",
+        "status": "Success",
+        "stdout": "Package information saved to /mnt/data/installed_packages.json\n",
+        "stderr": "",
+        "result": "",
+        "executionTimeInMilliseconds": 8
+    }
+}

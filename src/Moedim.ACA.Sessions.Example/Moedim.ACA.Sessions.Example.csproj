@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<UserSecretsId>dotnet-moedim.aca.sessions.example-62C9E69F-A230-4AA5-A27D-8B2F67911DC1</UserSecretsId>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Bet.Extensions.Templating.Console" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" />
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="../Moedim.ACA.Sessions/Moedim.ACA.Sessions.csproj" />
+	</ItemGroup>
+
+</Project>

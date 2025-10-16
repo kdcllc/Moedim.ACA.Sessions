@@ -1,0 +1,98 @@
+name: "Publish CI/CD"
+
+# Controls when the workflow will run
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - dev
+      - master
+    types:
+      - closed
+
+# environment vars
+env:
+  configuration: Release
+  solution: Moedim.ACA.Sessions.slnx
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    outputs:
+      Version: ${{ steps.gitversion.outputs.semVer }}
+      CommitsSinceVersionSource: ${{ steps.gitversion.outputs.CommitsSinceVersionSource }}
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # to fetch all history for all tags and branches
+
+      - uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: "9.0.x"
+
+      # https://github.com/GitTools/actions/blob/main/docs/examples/github/gitversion/setup.md#usage-examples
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v3.2.1
+        with:
+         versionSpec: '6.4.x'
+
+      # https://github.com/GitTools/actions/blob/main/docs/examples/github/gitversion/execute/usage-examples.md
+      - name: Use GitVersion
+        id: gitversion
+        uses: gittools/actions/gitversion/execute@v3.2.1
+
+      - name: Display GitVersion outputs
+        run: |
+          echo "ShortSha: ${{ steps.gitversion.outputs.shortSha }}"
+          echo "NuGetVersionV2: ${{ steps.gitversion.outputs.semVer }}"
+          echo "VersionSourceSha: ${{ steps.gitversion.outputs.versionSourceSha }}"
+          echo "CommitsSinceVersionSource: ${{ steps.gitversion.outputs.commitsSinceVersionSource }}"
+          echo "CommitDate: ${{ steps.gitversion.outputs.preReleaseTagWithDash }}"
+
+      - name: Clear Nuget Feeds
+        run: dotnet nuget locals --clear all
+
+      - name: Restore dependencies
+        run: dotnet restore ${{ env.solution }} -v quiet
+
+      - name: Build
+        run:
+          dotnet build ${{ env.solution }} --configuration ${{ env.configuration }} -p:Version=${{ steps.gitversion.outputs.semVer }}
+      - name: Test
+        run: dotnet test --no-build --verbosity normal
+
+      - name: Package
+        run:
+          dotnet pack --no-build --configuration ${{ env.configuration }} --no-restore -p:Version=${{ steps.gitversion.outputs.semVer }} -o packages
+
+      - name: Publish Nuget Packages
+        run: dotnet nuget push packages/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate -n
+
+  tag:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+      actions: read
+    needs: [build]
+    steps:
+      - name: Display GitVersion outputs
+        run: |
+          echo "Version: ${{ needs.build.outputs.Version }}"
+          echo "CommitsSinceVersionSource: ${{ needs.build.outputs.CommitsSinceVersionSource }}"
+
+      - name: Create Tag and Release
+        id: create_release
+        uses: actions/create-release@v1.1.1
+        if: needs.build.outputs.CommitsSinceVersionSource > 0 # only create a release if there has been a commit
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # this token is provided by actions not need to create
+        with:
+          tag_name: ${{ needs.build.outputs.Version }}
+          release_name: Release ${{ needs.build.outputs.Version }}

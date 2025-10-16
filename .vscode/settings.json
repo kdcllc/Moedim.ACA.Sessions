@@ -1,0 +1,27 @@
+{
+  "files.trimTrailingWhitespace": true,
+  "files.associations": {
+    "*.*proj": "xml",
+    "*.props": "xml",
+    "*.targets": "xml",
+    "*.tasks": "xml",
+    "Dockerfile*": "dockerfile"
+  },
+
+  "github.copilot.chat.commitMessageGeneration.instructions": [
+    {
+      "file": ".github/instructions/commit-message.instructions.md"
+    }
+  ],
+  "github.copilot.chat.codesearch.enabled": true,
+  "chat.agent.maxRequests": 100,
+
+  "rest-client.environmentVariables": {
+    "$shared": {
+      "token": ""
+    },
+    "azure": {
+      "base_url": "https://<REGION>.dynamicsessions.io/subscriptions/<SUBSCRIPTION_ID>/resourceGroups/<RESOURCE_GROUP>/sessionPools/<SESSION_POOL_NAME>/code/execute?api-version=2024-02-02-preview&identifier=<SESSION_ID>"
+    }
+  }
+}
