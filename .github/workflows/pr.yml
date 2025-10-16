@@ -8,6 +8,10 @@ on:
   pull_request:
     branches: [master, dev]
 
+env:
+  configuration: Release
+  solution: Moedim.ACA.Sessions.slnx
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
@@ -27,10 +31,10 @@ jobs:
           dotnet-version: "9.0.x"
 
       - name: Restore dependencies
-        run: dotnet restore
+        run: dotnet restore ${{ env.solution }} -v quiet
 
       - name: Build
-        run: dotnet build --no-restore
+        run: dotnet build ${{ env.solution }} --configuration ${{ env.configuration }}
 
       - name: Test
         run: dotnet test --no-build --verbosity normal

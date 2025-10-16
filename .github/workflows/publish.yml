@@ -63,7 +63,7 @@ jobs:
 
       - name: Build
         run:
-          dotnet build ${{ env.solution }} --configuration ${{ env.configuration }} --no-restore -p:Version=${{ steps.gitversion.outputs.semVer }}
+          dotnet build ${{ env.solution }} --configuration ${{ env.configuration }} -p:Version=${{ steps.gitversion.outputs.semVer }}
       - name: Test
         run: dotnet test --no-build --verbosity normal
 
