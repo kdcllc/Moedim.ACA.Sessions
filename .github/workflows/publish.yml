@@ -76,6 +76,10 @@ jobs:
 
   tag:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+      actions: read
     needs: [build]
     steps:
       - name: Display GitVersion outputs
