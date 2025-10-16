@@ -20,7 +20,7 @@
         <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
         <ProjectsCoreTargetFrameworks>net9.0;net8.0</ProjectsCoreTargetFrameworks>
         <ProjectsDebugCoreTargetFrameworks>net9.0</ProjectsDebugCoreTargetFrameworks>
-        <ProjectsTargetFrameworks>net9.0;net8.0;netstandard2.0;</ProjectsTargetFrameworks>
+        <ProjectsTargetFrameworks>net9.0;net8.0;</ProjectsTargetFrameworks>
         <ProjectsDebugTargetFrameworks>net9.0;</ProjectsDebugTargetFrameworks>
         <IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net7.0'))">true</IsAotCompatible>
         <Configurations>Debug;Release;Publish</Configurations>
