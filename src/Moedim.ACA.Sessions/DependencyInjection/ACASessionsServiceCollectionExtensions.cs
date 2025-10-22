@@ -36,7 +36,7 @@ public static class ACASessionsServiceCollectionExtensions
     /// <returns></returns>
     public static IServiceCollection AddCodeInterpreter(this IServiceCollection services)
     {
-        services.AddScoped<ICodeInterpreter, CodeInterpreter>();
+        services.TryAddScoped<ICodeInterpreter, CodeInterpreter>();
         return services;
     }
 

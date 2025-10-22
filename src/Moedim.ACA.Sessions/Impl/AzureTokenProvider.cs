@@ -104,6 +104,8 @@ internal class AzureTokenProvider : IAzureTokenProvider
             _cachedToken = token;
             _hasCachedToken = true;
 
+            _logger?.LogDebug("Token acquired for scopes {ExpiresOn}", token.ExpiresOn);
+
             if (_logger != null)
             {
                 LogAcquiredToken(_logger, token.ExpiresOn, null);

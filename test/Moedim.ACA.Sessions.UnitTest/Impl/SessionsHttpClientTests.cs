@@ -1,14 +1,10 @@
 using System.Net;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moedim.ACA.Sessions.Impl;
 using Moedim.ACA.Sessions.Options;
 using Moq;
 using Moq.Protected;
-using Xunit;
 
 namespace Moedim.ACA.Sessions.UnitTest.Impl;
 

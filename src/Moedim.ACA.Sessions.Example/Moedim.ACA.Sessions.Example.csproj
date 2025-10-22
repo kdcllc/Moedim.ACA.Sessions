@@ -13,6 +13,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="../Moedim.ACA.Sessions.Agents/Moedim.ACA.Sessions.Agents.csproj" />
 	  <ProjectReference Include="../Moedim.ACA.Sessions/Moedim.ACA.Sessions.csproj" />
 	</ItemGroup>
 

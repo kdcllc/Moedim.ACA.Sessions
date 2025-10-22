@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>$(ProjectsTargetFrameworks)</TargetFrameworks>
+    <TargetFrameworks Condition="'$(Configuration)' == 'Debug'">$(ProjectsDebugTargetFrameworks)</TargetFrameworks>
+    <NoWarn>$(NoWarn);MEAI001;IL3050;IL2026;</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Description>Microsoft Agent Framework AI Agent that enables Azure Container Apps dynamic
+      sessions provides fast and scalable access to a code interpreter.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="Microsoft.Agents.AI.OpenAI" />
+    <PackageReference Include="Microsoft.Extensions.AI.OpenAI" />
+    <PackageReference Include="Azure.AI.OpenAI" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Moedim.ACA.Sessions/Moedim.ACA.Sessions.csproj" />
+  </ItemGroup>
+
+</Project>

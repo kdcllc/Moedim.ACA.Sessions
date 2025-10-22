@@ -1,4 +1,6 @@
-﻿namespace Microsoft.Extensions.DependencyInjection;
+﻿using Moedim.ACA.Sessions.Example;
+
+namespace Microsoft.Extensions.DependencyInjection;
 
 internal static class ConsoleServiceCollectionExtensions
 {
@@ -7,6 +9,15 @@ internal static class ConsoleServiceCollectionExtensions
         services.AddScoped<IMain, Main>();
 
         // Register ACA Sessions services
-        services.AddACASessions();
+        services.AddAIAgentsACASessions();
+
+        services.AddAgent();
+    }
+
+    public static IServiceCollection AddAgent(this IServiceCollection services)
+    {
+        // Register the Code Interpreter service
+        services.AddScoped<CodeAgent>();
+        return services;
     }
 }
