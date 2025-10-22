@@ -6,7 +6,9 @@
 
 ![Stand With Israel](./img/IStandWithIsrael.png)
 
-> The second letter in the Hebrew alphabet is the ב bet/beit. Its meaning is "house". In the ancient pictographic Hebrew it was a symbol resembling a tent on a landscape.
+> This is a Hebrew word that translates "feast" or "appointed time."
+> "Appointed times" refers to HaSham's festivals in Vayikra/Leviticus 23rd.
+> The feasts are "signals and signs" to help us know what is on the heart of HaShem.
 
 **A C# library for Azure Container Apps dynamic sessions - enabling secure, isolated code execution for AI agents and applications.**
 

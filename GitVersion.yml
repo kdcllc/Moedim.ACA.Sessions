@@ -1,6 +1,6 @@
 workflow: GitHubFlow/v1
 mode: ContinuousDeployment
-next-version: 1.0.0
+next-version: 1.1.0
 branches:
   master:
     mode: ManualDeployment
