@@ -7,8 +7,6 @@ namespace Moedim.ACA.Sessions.UnitTest.DependencyInjection;
 
 public class ACASessionsServiceCollectionExtensionsTests
 {
-    private static readonly string[] Expected = ["scope-a", "scope-b"];
-
     [Fact]
     public void AddACASessions_WhenCalled_RegistersHttpClientFactory()
     {
@@ -34,8 +32,7 @@ public class ACASessionsServiceCollectionExtensionsTests
 
         var values = new Dictionary<string, string?>
         {
-            ["ACASessions:AzureTokenProvider:RefreshBeforeMinutes"] = "15",
-            ["ACASessions:AzureTokenProvider:Scopes"] = "scope-a scope-b"
+            ["ACASessions:AzureTokenProvider:RefreshBeforeMinutes"] = "15"
         };
 
         var config = new ConfigurationBuilder().AddInMemoryCollection(values).Build();
@@ -48,32 +45,6 @@ public class ACASessionsServiceCollectionExtensionsTests
         var options = provider.GetRequiredService<IOptions<AzureTokenProviderOptions>>().Value;
 
         Assert.Equal(15, options.RefreshBeforeMinutes);
-        Assert.Equal(Expected, options.Scopes);
-    }
-
-    [Fact]
-    public void AddACASessions_WithIndexedScopes_ConfiguresAzureTokenProviderOptions()
-    {
-        var services = new ServiceCollection();
-
-        var values = new Dictionary<string, string?>
-        {
-            ["ACASessions:AzureTokenProvider:RefreshBeforeMinutes"] = "15",
-            ["ACASessions:AzureTokenProvider:Scopes:0"] = "scope-a",
-            ["ACASessions:AzureTokenProvider:Scopes:1"] = "scope-b"
-        };
-
-        var config = new ConfigurationBuilder().AddInMemoryCollection(values).Build();
-        services.AddSingleton<IConfiguration>(config);
-
-        services.AddACASessions();
-
-        using var provider = services.BuildServiceProvider();
-
-        var options = provider.GetRequiredService<IOptions<AzureTokenProviderOptions>>().Value;
-
-        Assert.Equal(15, options.RefreshBeforeMinutes);
-        Assert.Equal(Expected, options.Scopes);
     }
 
     [Fact]
@@ -91,6 +62,5 @@ public class ACASessionsServiceCollectionExtensionsTests
         var options = provider.GetRequiredService<IOptions<AzureTokenProviderOptions>>().Value;
 
         Assert.Equal(0, options.RefreshBeforeMinutes);
-        Assert.Empty(options.Scopes);
     }
 }

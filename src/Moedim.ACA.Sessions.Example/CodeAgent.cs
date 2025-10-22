@@ -1,4 +1,5 @@
 using Azure.AI.OpenAI;
+using Azure.Core;
 using Azure.Identity;
 using Microsoft.Agents.AI;
 using Moedim.ACA.Sessions.Agents;
@@ -21,6 +22,8 @@ public class CodeAgent
     {
         var config = serviceProvider.GetRequiredService<IConfiguration>();
         var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
+        var authTokenProvider = serviceProvider.GetRequiredService<IAzureTokenProvider>();
+
         var endpoint = config["AzureOpenAI:Endpoint"];
         if (string.IsNullOrWhiteSpace(endpoint))
         {
@@ -33,9 +36,16 @@ public class CodeAgent
             throw new InvalidOperationException("AzureOpenAI:DeploymentName configuration is missing.");
         }
 
+        // https://cognitiveservices.azure.com/.default
+        var accessToken = authTokenProvider.GetTokenAsync(
+            ["https://cognitiveservices.azure.com/.default"],
+            CancellationToken.None).GetAwaiter().GetResult();
+
+        var creds = new StaticTokenCredential(accessToken);
+
         _agent = new AzureOpenAIClient(
             new Uri(endpoint),
-            new DefaultAzureCredential())
+            creds)
             .GetChatClient(deploymentName)
             .CreateAIAgent(
                 instructions: @"
@@ -64,5 +74,25 @@ public class CodeAgent
             cancellationToken: cancellationToken);
 
         return response;
+    }
+
+    private class StaticTokenCredential : TokenCredential
+    {
+        private readonly AccessToken _accessToken;
+
+        public StaticTokenCredential(AccessToken accessToken)
+        {
+            _accessToken = accessToken;
+        }
+
+        public override AccessToken GetToken(TokenRequestContext requestContext, CancellationToken cancellationToken)
+        {
+            return _accessToken;
+        }
+
+        public override ValueTask<AccessToken> GetTokenAsync(TokenRequestContext requestContext, CancellationToken cancellationToken)
+        {
+            return new ValueTask<AccessToken>(_accessToken);
+        }
     }
 }

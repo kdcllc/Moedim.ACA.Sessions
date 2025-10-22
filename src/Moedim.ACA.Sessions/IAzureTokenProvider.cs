@@ -1,3 +1,5 @@
+using Azure.Core;
+
 namespace Moedim.ACA.Sessions;
 
 /// <summary>
@@ -11,9 +13,10 @@ public interface IAzureTokenProvider : IDisposable
     void ClearCache();
 
     /// <summary>
-    /// Asynchronously obtains an Azure Entra authentication token.
+    /// Asynchronously obtains an Azure Entra authentication token for the specified scopes.
     /// </summary>
+    /// <param name="scopes">The scopes to request the token for. If not provided, uses default scopes.</param>
     /// <param name="cancellationToken">A token to cancel the asynchronous operation.</param>
-    /// <returns>A task that represents the asynchronous operation, containing the authentication token as a string.</returns>
-    Task<string> GetTokenAsync(CancellationToken cancellationToken);
+    /// <returns>A task that represents the asynchronous operation, containing the AccessToken.</returns>
+    Task<AccessToken> GetTokenAsync(string[] scopes, CancellationToken cancellationToken);
 }

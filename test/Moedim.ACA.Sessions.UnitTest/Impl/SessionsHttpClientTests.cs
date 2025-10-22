@@ -78,7 +78,8 @@ public class SessionsHttpClientTests
         handlerMock.Protected()
             .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.Is<HttpRequestMessage>(req => req.Headers.Authorization != null), ItExpr.IsAny<CancellationToken>())
             .ReturnsAsync(() => new HttpResponseMessage(HttpStatusCode.OK));
-        _tokenProviderMock.Setup(x => x.GetTokenAsync(It.IsAny<CancellationToken>())).ReturnsAsync("token123");
+        _tokenProviderMock.Setup(x => x.GetTokenAsync(It.IsAny<string[]>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new Azure.Core.AccessToken("token123", DateTimeOffset.UtcNow.AddMinutes(10)));
 
         using var httpClient = new HttpClient(handlerMock.Object);
         var client = CreateClient(httpClient, _tokenProviderMock.Object);

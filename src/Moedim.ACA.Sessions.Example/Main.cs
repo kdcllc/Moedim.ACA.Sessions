@@ -95,8 +95,9 @@ internal sealed class Main(
 
     private async Task GetTokenProviderAsync(CancellationToken cancellationToken)
     {
-        var token = await _azureTokenProvider.GetTokenAsync(cancellationToken: cancellationToken);
-        _logger.LogInformation("Acquired token with expiry {Token}", token);
+        var defaultScopes = new[] { "https://dynamicsessions.io/.default" };
+        var accessToken = await _azureTokenProvider.GetTokenAsync(scopes: defaultScopes, cancellationToken: cancellationToken);
+        _logger.LogInformation("Acquired token: {Token}, expires at: {ExpiresOn}", accessToken.Token, accessToken.ExpiresOn);
     }
 
     private async Task CreatePythonDeps(string sessionId, CancellationToken cancellationToken)

@@ -117,10 +117,11 @@ public sealed class SessionsHttpClient : ISessionsHttpClient
         // Optional auth header
         if (_authTokenProvider is not null)
         {
-            var token = await _authTokenProvider.GetTokenAsync(cancellationToken).ConfigureAwait(false);
-            if (!string.IsNullOrWhiteSpace(token))
+            var defaultScopes = new[] { "https://dynamicsessions.io/.default" };
+            var accessToken = await _authTokenProvider.GetTokenAsync(defaultScopes, cancellationToken).ConfigureAwait(false);
+            if (!string.IsNullOrWhiteSpace(accessToken.Token))
             {
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken.Token);
             }
         }
     }
